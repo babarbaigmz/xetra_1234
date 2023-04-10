@@ -1,15 +1,16 @@
 """
 Class to store method related to files read and write operations
 S3 bucket methods can also be implemented
-FileOperations class is similar to S3BucketConnector class in course
+FileOperations class is similar to S3BucketConnector class in the course
 
 Instance Variables:
 
 Instance Methods:
-"""
+""" 
 import pandas
 from pathlib import Path
 from typing import List
+from configs.process_logger import ProcessLog
 
 
 class FileOperations:

@@ -6,7 +6,7 @@ FileOperations class is similar to S3BucketConnector class in the course
 Instance Variables:
 
 Instance Methods:
-""" 
+"""
 import pandas
 from pathlib import Path
 from typing import List

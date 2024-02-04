@@ -19,7 +19,7 @@ def create_bucket(s3_resource, bucket_name):
     return s3_resource.Bucket(bucket_name)
 
 
-def read_file_df(bucket_resource, file_key: str, file_delimiter: str = ',', encoding: str = 'utf-8'):
+def read_csv_df(bucket_resource, file_key: str, file_delimiter: str = ',', encoding: str = 'utf-8'):
     """
     Load csv file into data frame
     :param bucket_resource:
@@ -115,7 +115,7 @@ def extract_files_data(bucket_resource, dates_list):
     :return:
     """
     files_list = [files for k in dates_list for files in return_bucket_objects(bucket_resource, k)]
-    data_frame = pandas.concat(objs=[read_file_df(bucket_resource, f) for f in files_list],
+    data_frame = pandas.concat(objs=[read_csv_df(bucket_resource, f) for f in files_list],
                                ignore_index=True)
     return data_frame
 
@@ -196,7 +196,7 @@ def main():
     source_bucket = 'xetra-1234'
     target_bucket = 'xetra1-project-bucket'
     date_time_format = '%Y-%m-%d'
-    default_date = '2022-12-31'
+    default_date = '2021-04-22'
     days_delta = 1
     columns = ['ISIN', 'Date', 'Time', 'StartPrice', 'MaxPrice', 'MinPrice', 'EndPrice', 'TradedVolume']
     parquet_file_key = 'xetra_daily_report'
@@ -210,8 +210,22 @@ def main():
     process_date = get_process_date(date_time_format, days_delta, default_date)
 
     # List of all dates since process date till today
-    dates_list = return_dates_list(process_date, date_time_format)
+    # dates_list = return_dates_list(process_date, date_time_format)
+    ########################################################################################################
+    ########################################################################################################
+    ########################################################################################################
 
+    df_meta = read_csv_df(target_bucket_resource, 'meta_file.csv')
+    print(df_meta)
+    today = datetime.today().date()
+    dates_list = [(process_date + timedelta(days=i)) for i in range(0, (today - process_date).days + 1)]
+
+    # unique processed dates from meta file
+    source_dates = set(pandas.to_datetime(df_meta['source_date']).dt.date)
+    min_process_date=
+    print(source_dates)
+    print(dates_list)
+    exit(1)
     # main etl pipeline process
     etl_process(source_bucket_resource, target_bucket_resource, dates_list, process_date, date_time_format, columns,
                 parquet_file_key)
